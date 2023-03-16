@@ -25,17 +25,16 @@ services:
     image: ghcr.io/windsource/picus:latest
     restart: always
     environment:
-      - PICUS_WOODPECKER_SERVER=https://woodpecker.example.com
-      - PICUS_WOODPECKER_TOKEN=<...>
-      - PICUS_AGENT_WOODPECKER_SERVER=woodpecker.example.com:443
+      - PICUS_WOODPECKER_SERVER=https://woodpecker.moengage.com
+      - PICUS_WOODPECKER_TOKEN=<WOODPECKER-PERSONAL-ACCESS-TOKEN>
+      - PICUS_AGENT_WOODPECKER_SERVER=woodpecker.moeinternal.com:9000
       - PICUS_AGENT_WOODPECKER_AGENT_SECRET=<...>
       - PICUS_AGENT_WOODPECKER_BACKEND=docker
-      - PICUS_PROVIDER_TYPE=hcloud
-      - PICUS_HCLOUD_TOKEN=<...>
-      - PICUS_HCLOUD_SERVER_TYPE=cx21
-      - PICUS_HCLOUD_LOCATION=nbg1
-      - PICUS_HCLOUD_SSH_KEYS=me@example.com
-      - PICUS_HCLOUD_ID=my-woodpecker-instance
+      - PICUS_PROVIDER_TYPE=aws
+      - AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXX
+      - AWS_REGION=<AWS-REGION>
+      - AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXX
+      - PICUS_AWS_INSTANCE_ID=i-12345678abcde
 ```
 
 The following environment variables can or have to be used independent of
@@ -48,27 +47,6 @@ Name | Description | Default
 `PICUS_POLL_INTERVAL` | Interval in which Picus will poll the Woodpecker API `/api/queue/info`.  For format see [go_parse_duration](https://docs.rs/go-parse-duration/latest/go_parse_duration/). | 10s
 `PICUS_MAX_IDLE_TIME` | Duration to wait after the last running job before shutting down or stopping an agent. For format see [go_parse_duration](https://docs.rs/go-parse-duration/latest/go_parse_duration/). | 30m
 `PICUS_PROVIDER_TYPE` | Type of cloud provider to use. Valid values are `hcloud` and `aws` | -
-
-### Hetzner cloud
-
-When Hetzner cloud is used as provider, Picus will create a new instance
-when an agent is required as Hetzner also
-[charges for stopped instances](https://www.hetzner.com/cloud).
-Thus Picus needs all configuration parameters that describe what instance
-shall be deployment. When the agent is not required anymore the instance will get
-deleted.
-
-The following environment variables exist for Hetzner cloud:
-
-Name | Description | Default
----- | ----------- | -------
-`PICUS_AGENT_WOODPECKER_*` | All environment variables starting with `PICUS_AGENT_WOODPECKER_` are forwarded as `WOODPECKER_` to the agent. See [Woodpecker doc](https://woodpecker-ci.org/docs/administration/agent-config) for all required and available parameters| -
-`PICUS_AGENT_IMAGE` | Container image to use for the agent | `woodpeckerci/woodpecker-agent:latest`
-`PICUS_HCLOUD_TOKEN` | API token for Hetzner cloud | -
-`PICUS_HCLOUD_SERVER_TYPE` | Server type in Hetzner cloud to use for agent | `cx11`
-`PICUS_HCLOUD_LOCATION` | Location to start server in Hetzner cloud | `nbg1`
-`PICUS_HCLOUD_SSH_KEYS` | List of ssh keys to apply to the server separated by comma | -
-`PICUS_HCLOUD_ID` | Unqiue id to identify resources created in Hetzner Cloud for this instance of Picus. Used to separate resources for different Picus installations in Hetzner cloud project. Observe limitation in RFC 1123.| `picus-test`
 
 ### AWS
 

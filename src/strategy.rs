@@ -45,7 +45,7 @@ impl Strategy {
 
     pub async fn apply(&mut self, queue_info: &WpQueueInfo) {
         let stats = &queue_info.stats;
-        if stats.worker_count == 0 && stats.running_count == 0 && stats.pending_count > 0 {
+        if stats.worker_count == 0 && stats.pending_count > 0 {
             info!("{} pending jobs. Starting agent.", stats.pending_count);
             let result = self.agent_provider.start().await;
             if let Err(err) = result {
